@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<defs>
+<radialGradient id="fade" cx="78%" cy="26%" r="70%">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+<stop offset="55%" stop-color="#ffffff" stop-opacity="0.35"/>
+<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+</radialGradient>
+<pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse">
+<circle cx="6" cy="6" r="3.1" fill="#3f77b8"/>
+</pattern>
+<mask id="m"><rect width="1600" height="1000" fill="url(#fade)"/></mask>
+</defs>
+<rect width="1600" height="1000" fill="url(#dots)" mask="url(#m)"/>
+</svg>
