@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CHAMPION'S CODE — a documentary about Ivan Golubkov</title>
+<meta name="description" content="Champion's Code is Film No. 1 of the documentary almanac “Russia. Starting Point”. A documentary drama about two-time Paralympic champion Ivan Golubkov. A presentation for investors and partners.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:ital,wght@0,300;0,400;0,500;0,600;0,700;1,500;1,600;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap&subset=cyrillic,cyrillic-ext,latin" rel="stylesheet">
+<style>
+/* ============================================================
+   СВОИ ШРИФТЫ (не с Google Fonts) — папка fonts/ рядом с index.html
+   Положи файлы с именами (расширение ЛЮБОЕ из: .woff2 .woff .ttf .otf):
+     fonts/display.ttf            — шрифт заголовков (обычный)
+     fonts/display-italic.ttf     — шрифт заголовков (курсив, если есть)
+     fonts/body.ttf               — шрифт основного текста
+   Ничего в коде менять не нужно — браузер сам найдёт файл с любым
+   из этих расширений. Если файла нет — сайт использует Oswald/Inter.
+   ============================================================ */
+@font-face{font-family:'SiteDisplay';src:url('fonts/display.woff2') format('woff2'),url('fonts/display.woff') format('woff'),url('fonts/display.ttf') format('truetype'),url('fonts/display.otf') format('opentype');font-weight:100 900;font-style:normal;font-display:swap}
+/* Отдельный файл КУРСИВА заголовков (если есть) — раскомментируй:
+@font-face{font-family:'SiteDisplay';src:url('fonts/display-italic.woff2') format('woff2'),url('fonts/display-italic.woff') format('woff'),url('fonts/display-italic.ttf') format('truetype'),url('fonts/display-italic.otf') format('opentype');font-weight:100 900;font-style:italic;font-display:swap} */
+@font-face{font-family:'SiteBody';src:url('fonts/body.woff2') format('woff2'),url('fonts/body.woff') format('woff'),url('fonts/body.ttf') format('truetype'),url('fonts/body.otf') format('opentype');font-weight:100 900;font-style:normal;font-display:swap}
+
+:root{
+  --bg:#080d15; --bg-2:#0c1521; --navy:#12294a; --navy-2:#1a3a63; --navy-3:#265a97;
+  --ice:#8fb8d8; --ice-dim:#6a8ea8; --ice-pale:#cfe0ea; --cream:#e9e2d0; --tan:#c68a4e;
+  --red-deep:#4a1010; --red:#8f1414; --red-bright:#e0201d; --coral:#ef4a4a;
+  --text:#eef1f5; --text-dim:#a9b7c4; --text-mute:#63758a; --line:rgba(143,184,216,.14);
+  /* ============================================================
+     ШРИФТЫ САЙТА / SITE FONTS — менять ЗДЕСЬ (одно слово):
+     --font-display — заголовки, кнопки, навигация
+     --font-body    — основной текст
+     Шрифт с Google Fonts — подключи в <link> выше и впиши имя тут.
+     Свой файл шрифта — см. блок «СВОИ ШРИФТЫ» в самом верху <style>.
+     ============================================================ */
+  --font-display:"Oswald";
+  --font-body:"Inter";
+  --display:var(--font-display),sans-serif; --body:'SiteBody',var(--font-body),sans-serif;
+  /* Свой шрифт (fonts/display.*) — ТОЛЬКО заголовки и названия блоков: */
+  --display-head:'SiteDisplay',var(--font-display),sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:var(--body);background:var(--bg);color:var(--text);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+
+.grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+#snow{position:fixed;inset:0;z-index:3;pointer-events:none}
+
+#skitrack{position:fixed;right:14px;top:0;bottom:0;width:18px;z-index:55;pointer-events:none;display:flex;gap:4px;justify-content:center;padding:70px 0 90px}
+#skitrack .rail{position:relative;width:2px;height:100%;background:repeating-linear-gradient(var(--line) 0 6px,transparent 6px 13px);border-radius:2px;overflow:hidden}
+#skitrack .rail i{position:absolute;left:0;top:0;width:100%;background:linear-gradient(180deg,var(--coral),var(--red-bright));border-radius:2px;height:0%;transition:height .1s linear}
+@media(max-width:880px){#skitrack{display:none}}
+
+.player{position:fixed;right:1.1rem;bottom:1.1rem;z-index:60;display:flex;align-items:center;gap:.7rem;
+  background:rgba(8,13,21,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid var(--line);border-radius:40px;padding:.45rem .95rem .45rem .45rem;max-width:270px}
+.p-btn{flex:none;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);
+  color:var(--coral);font-size:.95rem;cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:center}
+.p-btn:hover{background:var(--red-bright);border-color:var(--red-bright);color:#fff}
+.p-meta{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.p-label{font-family:var(--display);text-transform:uppercase;letter-spacing:.05em;font-size:.6rem;line-height:1.25;color:var(--text-dim)}
+.p-vol{-webkit-appearance:none;appearance:none;width:128px;height:4px;border-radius:4px;background:rgba(143,184,216,.25);cursor:pointer}
+.p-vol::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--red-bright);cursor:pointer;border:0}
+.p-vol::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--red-bright);cursor:pointer;border:0}
+
+.langsw{position:fixed;left:1.1rem;bottom:1.1rem;z-index:60;display:flex;gap:2px;
+  background:rgba(8,13,21,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border:1px solid var(--line);border-radius:40px;padding:4px}
+.langsw a{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.12em;padding:.45rem .85rem;border-radius:30px;color:var(--text-dim);transition:.25s}
+.langsw a:hover{color:var(--text)}
+.langsw a.on{background:var(--red-bright);color:#fff}
+
+.media{position:relative;overflow:hidden;background:var(--navy)}
+.media>img,.media>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tex{position:absolute;inset:0;z-index:1;pointer-events:none;background-position:center;background-size:cover;background-repeat:no-repeat}
+.tex.contour{background-image:url("images/tex-contour.svg");opacity:.5}
+.tex.halftone{background-image:url("images/tex-halftone.svg");opacity:.55}
+.tex.hatch{background-image:url("images/tex-hatch.svg");opacity:.5}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:center;gap:clamp(1rem,2.6vw,2.8rem);
+  padding:1rem 2rem;transition:background .4s,padding .4s,backdrop-filter .4s}
+nav.scrolled{background:rgba(8,13,21,.85);backdrop-filter:blur(12px);padding:.65rem 2rem;border-bottom:1px solid var(--line)}
+nav a.navlink{font-family:var(--display);font-weight:500;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text);opacity:.82;transition:opacity .25s,color .25s;white-space:nowrap}
+nav a.navlink:hover{opacity:1;color:var(--coral)}
+.brand{display:flex;align-items:center;padding:0 .8rem}
+.brand .logo{height:38px;width:auto;display:block}
+nav.scrolled .brand .logo{height:30px;transition:height .4s}
+.burger{display:none;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;position:absolute;right:1.4rem;top:1.15rem;z-index:2}
+.burger span{width:26px;height:2px;background:var(--text);transition:.3s}
+
+section{position:relative}
+.wrap{max-width:1180px;margin:0 auto;padding:0 clamp(1.2rem,5vw,2rem);position:relative;z-index:3}
+.eyebrow{font-family:var(--display-head);font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--red-bright);font-size:.76rem;margin-bottom:1rem}
+h2.display{font-family:var(--display-head);font-weight:700;font-style:italic;text-transform:uppercase;font-size:clamp(2rem,5vw,3.5rem);line-height:.98;letter-spacing:.005em;margin-bottom:1.6rem}
+h3{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+p{color:var(--text-dim);font-size:1.02rem;margin-bottom:1rem;max-width:70ch}
+p:last-child{margin-bottom:0}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.btn{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--display);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.86rem;color:#fff;background:var(--red-bright);padding:.95rem 1.8rem;border-radius:40px;border:1px solid var(--red-bright);transition:.25s;cursor:pointer}
+.btn:hover{background:var(--coral);border-color:var(--coral);transform:translateY(-1px)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ice);color:var(--ice);background:rgba(143,184,216,.06)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;position:relative;padding:7rem 0 3.2rem}
+#hero .media{position:absolute;inset:0}
+#hero .media img,#hero .media video{object-position:50% 20%;filter:brightness(.6) saturate(.95)}
+#hero .media::after{content:"";position:absolute;inset:0;z-index:2;
+  background:linear-gradient(0deg,rgba(6,9,13,.97) 0%,rgba(6,9,13,.55) 42%,rgba(6,9,13,.28) 66%,rgba(10,14,20,.55) 100%),
+             linear-gradient(100deg,rgba(6,9,13,.55) 0%,rgba(6,9,13,.1) 45%)}
+.hero-inner{position:relative;z-index:3}
+.hero-eyebrow{font-family:var(--display);font-weight:300;letter-spacing:.42em;text-transform:uppercase;color:var(--ice-dim);font-size:.72rem;margin-bottom:1rem}
+.hero-almanac{font-family:var(--display);font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-size:.82rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:.7rem;flex-wrap:wrap}
+.hero-almanac b{color:var(--coral);font-weight:600}
+.hero-title{font-family:var(--display-head);font-weight:700;text-transform:uppercase;line-height:.88;color:#f4f6f8;font-size:clamp(2.7rem,9.5vw,7.6rem);letter-spacing:.005em;text-shadow:0 4px 40px rgba(0,0,0,.6),0 0 70px rgba(224,32,29,.2)}
+.hero-title em{font-style:italic;color:var(--red-bright)}
+.hero-sub{font-family:var(--display-head);font-weight:500;text-transform:uppercase;letter-spacing:.16em;color:var(--ice);margin-top:1.3rem;font-size:clamp(1.15rem,2.6vw,1.7rem);display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.hero-sub span{font-family:var(--body);font-weight:400;font-style:italic;color:var(--text-dim);font-size:.62em;letter-spacing:0}
+.hero-tagline{max-width:520px;margin-top:1.6rem;font-size:1.08rem;color:var(--text-dim);font-style:italic}
+.hero-meta{margin-top:2.6rem;display:flex;gap:clamp(1.6rem,5vw,3.4rem);flex-wrap:wrap;font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem;color:var(--ice-dim)}
+.hero-meta b{color:var(--coral);display:block;font-size:1rem;letter-spacing:.02em;margin-bottom:.15rem}
+.scroll-cue{position:absolute;bottom:1.1rem;left:50%;transform:translateX(-50%);z-index:3;width:1px;height:36px;background:linear-gradient(var(--coral),transparent);animation:cue 2s infinite}
+@keyframes cue{0%{opacity:0;transform:translate(-50%,-10px)}50%{opacity:1}100%{opacity:0;transform:translate(-50%,10px)}}
+
+/* bg sections */
+.bgsec{position:relative;padding:clamp(5rem,12vh,9rem) 0;overflow:hidden}
+.bgsec>.media{position:absolute;inset:0;z-index:0}
+.bgsec .scrim{position:absolute;inset:0;z-index:1}
+.bgsec .tex{z-index:2}
+.bgsec .wrap{z-index:3}
+
+#synopsis .scrim{background:linear-gradient(90deg,rgba(8,13,21,.86) 0%,rgba(8,13,21,.55) 55%,rgba(8,13,21,.3) 100%),linear-gradient(0deg,rgba(8,13,21,.85),transparent 30%,transparent 70%,rgba(8,13,21,.7))}
+.synopsis-box{max-width:700px}
+.synopsis-box p:first-of-type{color:var(--text);font-size:1.2rem;font-weight:600}
+
+#idea .scrim{background:linear-gradient(90deg,rgba(6,10,16,.92) 0%,rgba(6,10,16,.68) 48%,rgba(6,10,16,.3) 100%),linear-gradient(0deg,rgba(8,13,21,.8),transparent 35%,transparent 75%,rgba(8,13,21,.6))}
+.idea-quote{font-family:var(--display-head);font-weight:700;font-style:italic;text-transform:uppercase;color:var(--cream);
+  font-size:clamp(1.7rem,4.4vw,3rem);line-height:1.06;letter-spacing:.005em;margin-bottom:1.8rem;max-width:15ch}
+.idea-body{max-width:600px}
+.idea-body .close{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--text);font-size:1.05rem;margin-top:1.4rem}
+.idea-body .close b{color:var(--red-bright);font-size:1.3rem;display:block;margin-top:.2rem;letter-spacing:.02em}
+
+#status{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#080d15,#0c1725);overflow:hidden}
+.status-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.status-tag{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;color:rgba(233,226,208,.95);font-size:clamp(1.6rem,3.6vw,2.6rem);line-height:1.08;letter-spacing:.005em}
+.checks{display:flex;flex-direction:column;gap:1.15rem}
+.check{display:flex;align-items:flex-start;gap:1rem}
+.check .mk{flex:none;width:28px;height:28px;border-radius:50%;border:2px solid var(--red-bright);display:flex;align-items:center;justify-content:center;font-size:.82rem;color:var(--red-bright);margin-top:.05rem}
+.check.doing .mk{border-color:var(--coral);color:var(--coral);position:relative}
+.check.doing .mk::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:1px solid var(--coral);opacity:.5;animation:pulse 2s infinite}
+@keyframes pulse{0%{transform:scale(.85);opacity:.6}70%{transform:scale(1.25);opacity:0}100%{opacity:0}}
+.check .tx{font-family:var(--display);font-weight:500;font-size:1.06rem;letter-spacing:.01em;color:var(--text)}
+.check .tx small{display:block;font-family:var(--body);font-weight:400;font-size:.82rem;letter-spacing:0;color:var(--coral);text-transform:uppercase;margin-top:.15rem;font-style:italic}
+
+#figure{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#0c1725,#11223a);overflow:hidden}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.6rem;margin:2.8rem 0 3.2rem}
+.stat{display:flex;flex-direction:column;align-items:center;text-align:center;gap:.9rem}
+.target{position:relative;width:104px;aspect-ratio:1}
+.target svg{width:100%;height:100%}
+.target .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:700;font-size:1.55rem;color:var(--cream)}
+.stat .lbl{font-family:var(--display);font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;color:var(--text-dim);line-height:1.35;max-width:16ch}
+.bio-timeline{position:relative;padding-left:2.2rem;max-width:780px;margin-top:1rem}
+.bio-timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--coral),var(--red),rgba(143,20,20,.15))}
+.bio-item{position:relative;margin-bottom:2.4rem}
+.bio-item:last-child{margin-bottom:0}
+.bio-item::before{content:"";position:absolute;left:-2.2rem;top:.35rem;width:12px;height:12px;border:3px solid var(--coral);background:var(--bg);border-radius:1px}
+.bio-item .yr{font-family:var(--display);font-weight:700;font-size:1.3rem;color:var(--coral);margin-bottom:.35rem;letter-spacing:.02em}
+.bio-item p{max-width:640px}
+
+/* film stills */
+#stills{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#11223a,#0a1018);overflow:hidden}
+.stills-carousel{position:relative;margin-top:2.6rem}
+.stills-track{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;padding-bottom:.4rem}
+.stills-track::-webkit-scrollbar{display:none}
+.stills-track .still{flex:0 0 calc((100% - 2rem)/3);scroll-snap-align:start}
+.st-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:rgba(8,13,21,.72);color:var(--text);font-size:1.4rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s;z-index:3}
+.st-nav:hover{border-color:var(--red-bright);color:var(--coral)}
+.st-prev{left:-14px}.st-next{right:-14px}
+@media(max-width:560px){.st-nav{width:40px;height:40px;font-size:1.15rem}.st-prev{left:.3rem}.st-next{right:.3rem}}
+.still{position:relative;border-radius:4px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/9;background:var(--navy);box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.still img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.still:hover img{transform:scale(1.045)}
+.still::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(143,184,216,.06);pointer-events:none}
+.stills-note{margin-top:1.4rem;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;font-size:.68rem;color:var(--text-mute)}
+
+#word{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#0a1018,#0d1622);overflow:hidden}
+.word-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.word-photo{border-radius:4px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px rgba(0,0,0,.55);aspect-ratio:9/16;max-width:380px}
+.word-text .quote-mark{font-family:var(--display);font-size:4.5rem;line-height:.6;color:var(--red-bright);opacity:.6;margin-bottom:.6rem;font-style:italic}
+.word-quote p{font-style:italic;color:var(--text);font-size:1.02rem;line-height:1.75;margin-bottom:1.05rem}
+.word-quote p:last-child{margin-bottom:0}
+.word-text .quote-mark.close{text-align:right;margin-top:1.1rem;margin-bottom:0;line-height:.2}
+.word-name{margin-top:1.6rem;font-family:var(--display);letter-spacing:.03em}
+.word-name .nm{font-size:1.15rem;color:var(--text);font-weight:600}
+.word-name .rl{font-size:.85rem;color:var(--coral);text-transform:uppercase;letter-spacing:.08em;margin-top:.15rem}
+
+#palette{position:relative;padding:clamp(5rem,12vh,9rem) 0;overflow:hidden}
+#palette>.media{position:absolute;inset:0;z-index:0}
+#palette .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(8,13,21,.78),rgba(8,13,21,.92))}
+.pal-strip{margin-top:2.6rem;border-radius:6px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);border:1px solid var(--line)}
+.pal-row{display:grid;grid-template-columns:repeat(10,1fr)}
+.pal-row .sw{aspect-ratio:2.4/1}
+.pal-anchors{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:2.2rem}
+.anchor{background:rgba(18,41,74,.55);border:1px solid var(--line);border-radius:8px;overflow:hidden;backdrop-filter:blur(3px)}
+.anchor .chip{height:74px}
+.anchor .meta{padding:.9rem 1rem 1.1rem}
+.anchor .meta h4{font-family:var(--display);font-size:.98rem;letter-spacing:.02em;color:var(--text);text-transform:none;font-weight:600;margin-bottom:.2rem}
+.anchor .meta code{font-family:"Oswald",monospace;font-size:.82rem;color:var(--text-mute);letter-spacing:.06em}
+
+#locations .scrim{background:linear-gradient(180deg,rgba(8,13,21,.68),rgba(8,13,21,.9))}
+.loc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.4rem;margin-top:2.6rem}
+.loc-card{background:rgba(18,41,74,.55);border:1px solid var(--line);border-radius:6px;padding:1.7rem 1.4rem;text-align:left;backdrop-filter:blur(4px)}
+.loc-card .ic{width:34px;height:34px;margin-bottom:1rem;color:var(--coral)}
+.loc-card .step{font-family:var(--display);font-weight:700;font-size:.8rem;color:var(--red-bright);letter-spacing:.08em;margin-bottom:.5rem}
+.loc-card h4{font-family:var(--display);font-size:1.05rem;letter-spacing:.02em;color:var(--ice);margin-bottom:.5rem;font-weight:600}
+.loc-card p{font-size:.88rem;margin:0}
+
+#now .scrim{background:linear-gradient(90deg,rgba(8,13,21,.93) 0%,rgba(8,13,21,.66) 52%,rgba(8,13,21,.22) 100%)}
+.now-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(224,32,29,.16);border:1px solid rgba(224,32,29,.42);color:var(--coral);font-family:var(--display);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;padding:.5rem 1rem;border-radius:30px;margin-bottom:1.6rem}
+.now-badge i{width:7px;height:7px;border-radius:50%;background:var(--coral);display:block;animation:pulse2 1.8s infinite}
+@keyframes pulse2{0%,100%{opacity:1}50%{opacity:.3}}
+
+#partners{padding:clamp(4.5rem,11vh,7.5rem) 0;background:linear-gradient(180deg,#0d1622,#0c1725);overflow:hidden}
+.marquee{margin-top:2.6rem;position:relative;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee-track{display:flex;gap:2.6rem;width:max-content;animation:scrollx 34s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+@keyframes scrollx{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.brand-item{flex:none;width:190px;height:96px;border:1px solid var(--line);border-radius:8px;background:rgba(18,41,74,.28);display:flex;align-items:center;justify-content:center;position:relative;padding:1.1rem}
+.brand-item img{max-height:56px;max-width:150px;width:auto;object-fit:contain;filter:grayscale(1) brightness(1.6);opacity:.82;transition:.3s}
+.brand-item:hover img{filter:none;opacity:1}
+.brand-item .ghost{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;font-family:var(--display);text-transform:uppercase;letter-spacing:.12em;color:var(--text-mute);font-size:.66rem}
+.brand-item .ghost b{color:var(--ice-dim);font-size:.9rem;letter-spacing:.06em}
+@media(prefers-reduced-motion:reduce){.marquee-track{animation:none;flex-wrap:wrap;width:auto;justify-content:center}}
+
+#audience{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#0c1725,#11223a);overflow:hidden}
+.aud-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin-top:2.6rem}
+.aud-card{background:rgba(18,41,74,.4);border:1px solid var(--line);border-radius:8px;padding:2rem 1.7rem}
+.aud-card h3{font-size:1.15rem;color:var(--coral);margin-bottom:.8rem}
+.aud-card p{font-size:.92rem;margin:0}
+
+#almanac{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#11223a,#0a1018);text-align:center;overflow:hidden}
+.almanac-figs{display:flex;justify-content:center;align-items:flex-end;gap:clamp(.5rem,2vw,1.1rem);margin:2.8rem auto;max-width:760px;flex-wrap:wrap}
+.fig{width:34px;height:70px;color:var(--navy-3)}
+.fig.on{color:var(--red-bright)}
+.almanac-note{max-width:640px;margin:0 auto}
+
+#teaser{padding:clamp(5rem,12vh,9rem) 0;background:linear-gradient(180deg,#0a1018,#080d15);text-align:center}
+.teaser-frame{max-width:960px;margin:2.4rem auto 0;aspect-ratio:16/9;border-radius:8px;position:relative;overflow:hidden;border:1px solid var(--line);
+  background:#0b1522;display:flex;align-items:center;justify-content:center;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.teaser-frame img.poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.5}
+.teaser-frame .dim{position:absolute;inset:0;background:radial-gradient(90% 90% at 50% 45%,rgba(8,13,21,.25),rgba(8,13,21,.82))}
+.teaser-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:1.1rem;padding:2rem}
+.play-ic{width:78px;height:78px;border-radius:50%;border:2px solid rgba(233,226,208,.55);display:flex;align-items:center;justify-content:center;color:var(--cream);background:rgba(8,13,21,.35);transition:.25s}
+.teaser-frame:hover .play-ic{border-color:var(--coral);color:var(--coral);transform:scale(1.05)}
+.play-ic svg{width:30px;height:30px;margin-left:4px}
+.teaser-soon{font-family:var(--display);font-weight:600;text-transform:uppercase;letter-spacing:.18em;color:var(--ice-pale);font-size:.82rem;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.teaser-note{font-size:.9rem;color:var(--text-dim);max-width:36ch;margin:0;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+
+#invest{padding:clamp(5rem,12vh,9rem) 0;text-align:center;position:relative;overflow:hidden;background:#0a1220}
+#invest>.media{position:absolute;inset:0;z-index:0}
+#invest>.media img{opacity:.4}
+#invest .scrim{position:absolute;inset:0;z-index:1;background:linear-gradient(160deg,rgba(26,58,99,.75) 0%,rgba(8,13,21,.92) 70%),radial-gradient(60% 60% at 50% 0%,rgba(224,32,29,.2),transparent 70%)}
+.invest-inner{position:relative;z-index:2;max-width:760px;margin:0 auto}
+.invest-points{display:flex;justify-content:center;gap:clamp(1.4rem,4vw,3rem);flex-wrap:wrap;margin:2.4rem 0 2.8rem;font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:.86rem;color:var(--ice-dim)}
+.invest-points b{display:block;color:var(--coral);font-size:1.5rem;font-weight:700;letter-spacing:.01em;margin-bottom:.2rem;font-style:italic}
+.invest-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.4rem}
+
+footer{position:relative;overflow:hidden;background:#060809;padding:4rem 1rem 5.5rem;text-align:center;border-top:1px solid var(--line)}
+footer .fire-line{font-family:var(--display);font-weight:700;font-style:italic;text-transform:uppercase;letter-spacing:.02em;font-size:clamp(1.3rem,4vw,2rem);color:var(--coral);margin-bottom:2rem}
+footer .credit{font-family:var(--display);letter-spacing:.05em}
+footer .credit .label{color:var(--text-mute);font-size:.8rem;text-transform:uppercase;letter-spacing:.16em}
+footer .credit .nm{font-size:1.15rem;color:var(--text);margin:.25rem 0 1.5rem}
+footer .contacts{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap}
+footer .mail,footer .tel{display:inline-flex;align-items:center;gap:.55rem;color:var(--ice);font-size:.98rem;border:1px solid var(--line);padding:.68rem 1.3rem;border-radius:40px;transition:.25s}
+footer .mail:hover,footer .tel:hover{border-color:var(--red-bright);color:var(--coral)}
+footer .bc{margin-top:2.6rem;font-family:var(--display);letter-spacing:.22em;color:var(--text-mute);font-size:.7rem;display:flex;align-items:center;justify-content:center;gap:.6rem}
+footer .bc img{height:26px;width:auto;opacity:.85}
+
+@media(max-width:960px){
+  .stat-row{grid-template-columns:repeat(2,1fr);row-gap:2.2rem}
+  .stills-track .still{flex-basis:calc((100% - 1rem)/2)}
+  .word-grid{grid-template-columns:1fr;text-align:left}
+  .word-photo{margin:0 auto;max-width:320px}
+  .status-grid{grid-template-columns:1fr;gap:2rem}
+  .loc-grid{grid-template-columns:repeat(2,1fr)}
+  .pal-anchors{grid-template-columns:repeat(2,1fr)}
+  .aud-grid{grid-template-columns:1fr;max-width:520px;margin-inline:auto}
+  .invest-points{gap:1.6rem}
+}
+@media(max-width:880px){
+  nav{justify-content:flex-start;gap:0}
+  nav .navlink{display:none}
+  nav.open .navlink{display:block}
+  nav.open{flex-direction:column;align-items:flex-start;gap:1.1rem;background:rgba(8,13,21,.97);backdrop-filter:blur(14px);padding:5rem 2rem 2rem}
+  .brand{position:absolute;left:1.3rem;top:.6rem}
+  nav.open .brand{position:static;margin-bottom:.4rem}
+  .burger{display:flex}
+  nav.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  nav.open .burger span:nth-child(2){opacity:0}
+  nav.open .burger span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+}
+@media(max-width:560px){
+  #hero{padding:6rem 0 3rem;min-height:92vh}
+  .hero-meta{gap:1.4rem}
+  .scroll-cue{display:none}
+  .bgsec,#figure,#stills,#word,#palette,#status,#audience,#almanac,#teaser,#invest,#partners{padding:clamp(3.4rem,9vh,5.5rem) 0}
+  .idea-quote{max-width:none}
+  .stat-row{grid-template-columns:repeat(2,1fr);gap:1.6rem 1rem}
+  .target{width:84px}.target .num{font-size:1.25rem}
+  .stills-track .still{flex-basis:86%}
+  .loc-grid{grid-template-columns:1fr}
+  .pal-anchors{grid-template-columns:1fr}
+  .pal-row .sw{aspect-ratio:1.6/1}
+  .invest-points{flex-direction:column;gap:1.2rem}
+  .player{right:.6rem;bottom:.6rem;padding:.4rem .8rem .4rem .4rem;max-width:210px}
+  .p-vol{width:86px}
+  .langsw{left:.6rem;bottom:.6rem}
+  .langsw a{padding:.4rem .7rem;font-size:.68rem}
+  .almanac-figs{gap:.4rem}.fig{width:24px;height:52px}
+  .brand-item{width:150px;height:82px}
+  footer{padding-bottom:6rem}
+}
+
+/* ===== v4: photo backgrounds + anti-crop positioning ===== */
+#status,#figure,#audience,#almanac{position:relative}
+footer{position:relative}
+#status>.media,#figure>.media,#audience>.media,#almanac>.media,footer>.media{position:absolute;inset:0;z-index:0}
+#status .scrim,#figure .scrim,#audience .scrim,#almanac .scrim,footer .scrim{position:absolute;inset:0;z-index:1}
+#status .scrim{background:linear-gradient(90deg,rgba(8,13,21,.93) 0%,rgba(8,13,21,.7) 55%,rgba(8,13,21,.42) 100%),linear-gradient(0deg,rgba(8,13,21,.75),transparent 30%,transparent 72%,rgba(8,13,21,.7))}
+#figure .scrim{background:linear-gradient(180deg,rgba(8,13,21,.88) 0%,rgba(8,13,21,.8) 45%,rgba(10,16,26,.93) 100%)}
+#audience .scrim{background:linear-gradient(180deg,rgba(8,13,21,.84),rgba(8,13,21,.9))}
+#almanac .scrim{background:linear-gradient(180deg,rgba(8,13,21,.82),rgba(8,13,21,.93))}
+footer .scrim{background:linear-gradient(180deg,rgba(6,8,9,.86),rgba(6,8,9,.95))}
+footer>*:not(.media):not(.scrim){position:relative;z-index:2}
+/* key-subject safe positions so faces/objects don't get cropped on wide screens */
+#now>.media img{object-position:70% 8%}
+#locations>.media img{object-position:50% 42%}
+#idea>.media img{object-position:60% 50%}
+#synopsis>.media img{object-position:55% 45%}
+#status>.media img{object-position:35% 45%}
+#figure>.media img{object-position:50% 62%}
+#audience>.media img{object-position:50% 55%}
+#almanac>.media img{object-position:50% 45%}
+footer>.media img{object-position:62% 40%}
+#invest>.media img{object-position:50% 55%}
+/* ultra-wide: keep sections tall enough that cover-crop stays gentle */
+@media(min-width:1920px){
+  .bgsec{min-height:620px}
+  #now,#locations{min-height:680px;display:flex;align-items:center}
+  #now .wrap,#locations .wrap{width:100%}
+}
+
+/* ===== v5: brand hover + auto-fit, lightbox, word bg continuation ===== */
+.brand-item{transition:transform .3s,border-color .3s,box-shadow .3s}
+.brand-item:hover{transform:scale(1.12);border-color:rgba(143,184,216,.4);box-shadow:0 14px 40px rgba(0,0,0,.5);z-index:2}
+.brand-item.has-logo{width:auto;min-width:140px;padding:.85rem 1.6rem;background:#eef1f5;border-color:transparent}
+.brand-item.has-logo img{max-height:62px;max-width:230px;filter:grayscale(1);opacity:.92}
+.brand-item.has-logo:hover img{filter:none;opacity:1}
+#word{background:linear-gradient(180deg,#0a1018,#11223a)}
+.still{cursor:zoom-in}
+#lightbox{position:fixed;inset:0;z-index:100;background:rgba(4,7,12,.94);display:none;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#lightbox.open{display:flex}
+#lightbox img{max-width:92vw;max-height:88vh;border-radius:6px;box-shadow:0 30px 90px rgba(0,0,0,.7)}
+#lightbox .lb-close{position:absolute;top:1.2rem;right:1.4rem;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:rgba(8,13,21,.6);color:var(--text);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s;z-index:2}
+#lightbox .lb-close:hover{border-color:var(--red-bright);color:var(--coral)}
+#lightbox .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;border:1px solid var(--line);background:rgba(8,13,21,.6);color:var(--text);font-size:1.5rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s;z-index:2}
+#lightbox .lb-nav:hover{border-color:var(--red-bright);color:var(--coral)}
+#lightbox .lb-prev{left:1.2rem}
+#lightbox .lb-next{right:1.2rem}
+@media(max-width:560px){#lightbox .lb-nav{width:42px;height:42px;font-size:1.2rem}#lightbox .lb-prev{left:.6rem}#lightbox .lb-next{right:.6rem}}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<canvas id="snow"></canvas>
+<div id="skitrack"><div class="rail"><i id="ski1"></i></div><div class="rail"><i id="ski2"></i></div></div>
+
+<audio id="bgm" src="audio/theme.mp3" loop preload="none"></audio>
+<div id="player" class="player">
+  <button id="playbtn" class="p-btn" aria-label="Play / Pause">▶</button>
+  <div class="p-meta">
+    <span class="p-label">For full immersion,<br>turn the sound on</span>
+    <input id="vol" class="p-vol" type="range" min="0" max="100" value="80" aria-label="Volume">
+  </div>
+</div>
+
+<div class="langsw">
+  <a href="index.html">RU</a>
+  <a href="en.html" class="on">EN</a>
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" aria-label="Previous">‹</button>
+  <button class="lb-nav lb-next" aria-label="Next">›</button>
+  <img src="" alt="">
+</div>
+
+<nav id="nav">
+  <a href="#idea" class="navlink">Idea</a>
+  <a href="#synopsis" class="navlink">Synopsis</a>
+  <a href="#figure" class="navlink">The Hero</a>
+  <a href="#hero" class="brand" aria-label="Top"><img class="logo" src="images/black-cobra-logo.png" alt="Black Cobra"></a>
+  <a href="#stills" class="navlink">Stills</a>
+  <a href="#locations" class="navlink">Locations</a>
+  <a href="#invest" class="navlink">Investors</a>
+  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<section id="hero">
+  <div class="media"><img src="images/hero-athlete.jpg" alt="Ivan Golubkov"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-eyebrow">Black Cobra presents</div>
+    <div class="hero-almanac">Documentary almanac “Russia. Starting Point” <b>· Film No. 1</b></div>
+    <h1 class="hero-title">CHAMPION'S<br><em>CODE</em></h1>
+    <div class="hero-sub">Ivan Golubkov <span>two-time Paralympic champion</span></div>
+    <p class="hero-tagline">His journey began where others would have stopped…</p>
+    <div class="hero-meta">
+      <div><b>Docudrama</b>biography · sports epic</div>
+      <div><b>60 minutes</b>running time</div>
+      <div><b>4 locations</b>Komi · Moscow · Sochi · Cortina</div>
+    </div>
+  </div>
+  <div class="scroll-cue"></div>
+</section>
+
+<section id="synopsis" class="bgsec">
+  <div class="media"><img src="images/bg-loglain.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow">Synopsis</div>
+    <div class="synopsis-box">
+      <p>The snow-bound Komi Republic. The silence of the northern wilderness is broken by the sharp bite of ski poles cutting into ice. This is the rhythm of Ivan Golubkov's life.</p>
+      <p>This film is more than the success story of a Paralympic athlete. It is a study of the strength of the human will. Ivan Golubkov's life can be read as the deciphering of a unique “code” that helped him — despite hardships from early childhood — become one of the most decorated sit-skiers in the world.</p>
+      <p>The documentary traces a path that seemed impossible to many. Ivan grew up in a boarding school, where life followed a strict routine and every day demanded effort. From an early age he chose sport as the arena where the limits of what is possible are set only by persistence and grit — not by physical constraints.</p>
+    </div>
+  </div>
+</section>
+
+<section id="idea" class="bgsec">
+  <div class="media"><img src="images/bg-poles-baskets.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow">Core idea</div>
+    <div class="idea-quote">“There will be your own distance. Your own fight. Your own victory!”</div>
+    <div class="idea-body">
+      <p>To show how individual success turns into collective inspiration and becomes part of a nation's heritage.</p>
+      <p>This is a film about finding your own path, about believing in yourself — and about how even the hardest obstacles can become a point of growth.</p>
+      <div class="close">This will be a story about a personal code.<b>CHAMPION'S CODE.</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="media"><img src="images/bg-rifle.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <div class="status-grid">
+      <div class="reveal">
+        <div class="eyebrow">Project status</div>
+        <div class="status-tag">The film is already in production</div>
+      </div>
+      <div class="checks reveal">
+        <div class="check"><span class="mk">✓</span><span class="tx">Hero, locations and film crew confirmed</span></div>
+        <div class="check"><span class="mk">✓</span><span class="tx">Location shooting completed</span></div>
+        <div class="check"><span class="mk">✓</span><span class="tx">Script plan and film structure in place</span></div>
+        <div class="check doing"><span class="mk">●</span><span class="tx">Editing & color-grading period<small>happening right now</small></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="figure">
+  <div class="media"><img src="images/bg-taiga.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">The hero</div>
+      <h2 class="display">A real journey.<br>A real code.</h2>
+      <p style="max-width:620px">The story is built on real facts: the crew is already working with the hero and has access to his training and inner circle. Below is the journey that will form the film's dramatic arc.</p>
+    </div>
+    <div class="stat-row reveal">
+      <div class="stat"><div class="target"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#265a97" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="none" stroke="#e9e2d0" stroke-width="6" opacity=".85"/><circle cx="50" cy="50" r="20" fill="none" stroke="#e0201d" stroke-width="6"/><circle cx="50" cy="50" r="8" fill="#ef4a4a"/></svg><span class="num">2×</span></div><div class="lbl">Paralympic gold medals, Milano Cortina 2026</div></div>
+      <div class="stat"><div class="target"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#265a97" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="none" stroke="#e9e2d0" stroke-width="6" opacity=".85"/><circle cx="50" cy="50" r="20" fill="none" stroke="#e0201d" stroke-width="6"/><circle cx="50" cy="50" r="8" fill="#ef4a4a"/></svg><span class="num">6×</span></div><div class="lbl">World champion in cross-country skiing and biathlon</div></div>
+      <div class="stat"><div class="target"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#265a97" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="none" stroke="#e9e2d0" stroke-width="6" opacity=".85"/><circle cx="50" cy="50" r="20" fill="none" stroke="#e0201d" stroke-width="6"/><circle cx="50" cy="50" r="8" fill="#ef4a4a"/></svg><span class="num">9×</span></div><div class="lbl">World Cup winner</div></div>
+      <div class="stat"><div class="target"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#265a97" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="none" stroke="#e9e2d0" stroke-width="6" opacity=".85"/><circle cx="50" cy="50" r="20" fill="none" stroke="#e0201d" stroke-width="6"/><circle cx="50" cy="50" r="8" fill="#ef4a4a"/></svg><span class="num">6-7</span></div><div class="lbl">Years old — the age Ivan first got on skis</div></div>
+    </div>
+    <div class="bio-timeline reveal">
+      <div class="bio-item"><div class="yr">1995 — Inta</div><p>Ivan was born with a congenital musculoskeletal condition. Until the age of five — an orphanage, then a boarding school in Syktyvkar, where life followed a strict routine and every day demanded effort.</p></div>
+      <div class="bio-item"><div class="yr">2007 — the coach</div><p>A cross-country skiing coach notices the energetic twelve-year-old and suggests he try sit-skiing. Three years of relentless training later, the first national junior titles arrive.</p></div>
+      <div class="bio-item"><div class="yr">2014–2022 — the summit</div><p>World Cup victories in Finland, six world titles in Norway, the rank of Merited Master of Sport of Russia. Twice — in 2018 and 2022 — the national team was barred from the Paralympic Games on the eve of the main start.</p></div>
+      <div class="bio-item"><div class="yr">2026 — Milano Cortina</div><p>The third attempt. For the first time in his career Ivan Golubkov reaches a Paralympic start line — and leaves it a two-time champion. This will be a story about a personal code. A champion's code.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="stills">
+  <div class="tex halftone" style="opacity:.24"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Film stills</div>
+      <h2 class="display">First frames</h2>
+      <p style="max-width:620px">Principal photography is complete — the film is now in the edit and color-grading suite. Below are real frames from the working cut.</p>
+    </div>
+    <div class="stills-carousel reveal">
+      <button class="st-nav st-prev" aria-label="Previous">&#8249;</button>
+      <div class="stills-track" id="stills-track">
+      <div class="still"><img loading="lazy" src="images/stills/still-biathlon-wide.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-race.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-climb.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-smile.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-mama.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-syktyvkar.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-award.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-medals.jpg" alt="Still from the film Champion's Code"></div>
+      <div class="still"><img loading="lazy" src="images/stills/still-face.jpg" alt="Still from the film Champion's Code"></div>
+    </div>
+      <button class="st-nav st-next" aria-label="Next">&#8250;</button>
+    </div>
+    <div class="stills-note">Frames from working materials · color grade not final</div>
+  </div>
+</section>
+
+<section id="word">
+  <div class="tex halftone" style="opacity:.24"></div>
+  <div class="wrap">
+    <div class="word-grid reveal">
+      <div class="word-photo media"><img src="images/director-rifle.jpg" alt="Svetlana Kobrakova"></div>
+      <div class="word-text">
+        <div class="eyebrow">Director's statement</div>
+        <div class="quote-mark">«</div>
+        <div class="word-quote">
+          <p>I am making this film not simply to tell one more success story among many. I am making it because in the life of Ivan Golubkov I saw something far greater — a special key, a way to decipher the very “CHAMPION'S CODE” that can inspire every one of us.</p>
+          <p>Why does this matter so much to me? Because I believe that in today's world, full of challenges and uncertainty, we need beacons more than ever. We need living proof that it is possible not merely to endure, but to surpass yourself when everything seems to be against you. Ivan's story — his journey from a boarding school to the podiums of world championships — is exactly that kind of beacon.</p>
+          <p>For me this is more than a documentary project. It is a deep exploration of human will, an attempt to understand where this incredible resilience comes from — this absolute fearlessness in the face of every barrier the world tried to raise. I want to show how the hardest trials produce not just an athlete, but a symbol of an unbreakable spirit — a person whose story becomes collective inspiration and a national treasure.</p>
+          <p>This film is my attempt to look behind the scenes of obvious success and find the invisible threads, the inner mechanisms that allowed Ivan to turn his limitations into points of growth, and his choice of sport into a boundless field of possibilities. It is a story about finding your own path, about limitless self-belief, about the fact that true boundaries exist only in our minds.</p>
+          <p>I want every viewer, having seen Ivan's life, to ask themselves: “What is stopping me?” — and to find in his story the strength to move forward, faith in their own abilities, and the understanding that the “CHAMPION'S CODE” is not only about sport. It is about life. About each of us.</p>
+        </div>
+        <div class="quote-mark close">»</div>
+        <div class="word-name">
+          <div class="nm">Svetlana Kobrakova</div>
+          <div class="rl">Film director · almanac executive producer</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="palette">
+  <div class="media"><img src="images/bg-ski-closeup.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow">Visual language</div>
+    <h2 class="display">The film's color scheme</h2>
+    <p style="max-width:600px">The image is built on the contrast of icy northern blue and living fire-red: the cold of the distance against the warmth of character. The palette is defined in advance — every frame will follow a single visual code.</p>
+    <div class="pal-strip">
+      <div class="pal-row"><span class="sw" style="background:#43241f"></span><span class="sw" style="background:#7d1608"></span><span class="sw" style="background:#e11a17"></span><span class="sw" style="background:#ef4a45"></span><span class="sw" style="background:#6c9cc4"></span><span class="sw" style="background:#1a7cb2"></span><span class="sw" style="background:#175a86"></span><span class="sw" style="background:#123a5a"></span><span class="sw" style="background:#0c2438"></span><span class="sw" style="background:#050810"></span></div>
+      <div class="pal-row"><span class="sw" style="background:#5a1526"></span><span class="sw" style="background:#d21038"></span><span class="sw" style="background:#39494f"></span><span class="sw" style="background:#14313b"></span><span class="sw" style="background:#0e2a3e"></span><span class="sw" style="background:#123a56"></span><span class="sw" style="background:#0f3450"></span><span class="sw" style="background:#124060"></span><span class="sw" style="background:#0b3149"></span><span class="sw" style="background:#0a2a40"></span></div>
+      <div class="pal-row"><span class="sw" style="background:#e9e4d0"></span><span class="sw" style="background:#cdd4c8"></span><span class="sw" style="background:#8fa0a0"></span><span class="sw" style="background:#7a94a4"></span><span class="sw" style="background:#adbbb8"></span><span class="sw" style="background:#7f9096"></span><span class="sw" style="background:#6a7e88"></span><span class="sw" style="background:#8a7a62"></span><span class="sw" style="background:#3a3a36"></span><span class="sw" style="background:#060a0c"></span></div>
+      <div class="pal-row"><span class="sw" style="background:#c68a4e"></span><span class="sw" style="background:#3a3632"></span><span class="sw" style="background:#4a5f6a"></span><span class="sw" style="background:#123a56"></span><span class="sw" style="background:#0f3450"></span><span class="sw" style="background:#124060"></span><span class="sw" style="background:#0b3149"></span><span class="sw" style="background:#123f5e"></span><span class="sw" style="background:#0a3048"></span><span class="sw" style="background:#071f30"></span></div>
+    </div>
+    <div class="pal-anchors">
+      <div class="anchor"><div class="chip" style="background:#1a7cb2"></div><div class="meta"><h4>Ice blue</h4><code>#1A7CB2</code></div></div>
+      <div class="anchor"><div class="chip" style="background:#e0201d"></div><div class="meta"><h4>Fire red</h4><code>#E0201D</code></div></div>
+      <div class="anchor"><div class="chip" style="background:#e9e4d0"></div><div class="meta"><h4>Snow</h4><code>#E9E4D0</code></div></div>
+      <div class="anchor"><div class="chip" style="background:#0c2438"></div><div class="meta"><h4>Deep night</h4><code>#0C2438</code></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="locations" class="bgsec">
+  <div class="media"><img src="images/stills/still-road-back.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow">Locations</div>
+    <h2 class="display">From Komi to Cortina</h2>
+    <p style="max-width:600px">Four points on the map, each a stage of the hero's journey: from his first ski track in the North to the Paralympic podium in Italy.</p>
+    <div class="loc-grid">
+      <div class="loc-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 L4 20 H20 Z"/><path d="M12 2 L16 12 H8 Z" opacity=".5"/></svg>
+        <div class="step">01 · Origin</div><h4>Komi Republic</h4><p>Inta and Syktyvkar — the hero's birthplace and his very first ski track</p>
+      </div>
+      <div class="loc-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="9" width="4" height="11"/><rect x="10" y="4" width="4" height="16"/><rect x="16" y="12" width="4" height="8"/></svg>
+        <div class="step">02 · Growth</div><h4>Moscow</h4><p>Vorobyovy Gory — the national team's training base</p>
+      </div>
+      <div class="loc-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+        <div class="step">03 · Experience</div><h4>Sochi</h4><p>The Olympic Park — a symbol of past victories and the journey's reference point</p>
+      </div>
+      <div class="loc-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12 L21 12 M12 3 L12 21" opacity=".5"/><circle cx="12" cy="12" r="9"/></svg>
+        <div class="step">04 · Triumph</div><h4>Milano Cortina</h4><p>Italy — where the 30-year-old athlete reached his first Paralympic start line and took two golds</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="now" class="bgsec">
+  <div class="media"><img src="images/stills/still-portrait-red.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="now-badge"><i></i>Relevant right now</div>
+    <h2 class="display">The film arrives at the<br>peak of its hero's fame</h2>
+    <div style="max-width:680px">
+      <p style="font-size:1.08rem;color:var(--text)">In March 2026, Ivan Golubkov reached a Winter Paralympics start line for the first time in his career — and became a two-time champion. Three attempts, two team bans from the Games, thirty years of life — and finally an absolute triumph in Italy.</p>
+      <p>A rare alignment for documentary film: the hero at peak form, recognition at its highest, and a story with a ready-made dramatic finale that doesn't need to be invented.</p>
+    </div>
+  </div>
+</section>
+
+<section id="audience">
+  <div class="media"><img src="images/bg-range.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">Who this film is for</div>
+      <h2 class="display">The viewer. The platform. The investor.</h2>
+    </div>
+    <div class="aud-grid reveal">
+      <div class="aud-card"><h3>The viewer</h3><p>A story about willpower, not a diagnosis. It gives the audience solid ground: circumstances don't define the outcome when there is character and hard work.</p></div>
+      <div class="aud-card"><h3>The platform</h3><p>A ready emotional hook, a fresh news peg — victory at the 2026 Paralympics — and a hero already covered by national media.</p></div>
+      <div class="aud-card"><h3>The investor</h3><p>The first film of the “Russia. Starting Point” franchise, with clear potential for a continuing series — access to the hero and venues is already secured by the production.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="almanac">
+  <div class="media"><img src="images/bg-moscow.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap reveal">
+    <div class="eyebrow" style="justify-content:center;display:flex">Part of a bigger project</div>
+    <h2 class="display">Russia. Starting Point</h2>
+    <p class="almanac-note">An honest, large-scale portrait of Russia through the lives of those shaping its future. Champion's Code is the first film of the documentary almanac — stories of the country's other heroes will follow.</p>
+    <div class="almanac-figs">
+      <svg class="fig on" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+      <svg class="fig" viewBox="0 0 24 48"><circle cx="12" cy="8" r="6" fill="currentColor"/><rect x="7" y="16" width="10" height="28" rx="3" fill="currentColor"/></svg>
+    </div>
+  </div>
+</section>
+
+<section id="partners">
+  <div class="wrap reveal">
+    <div class="eyebrow" style="justify-content:center;display:flex;text-align:center">Project partners</div>
+    <h2 class="display" style="text-align:center">They work with us</h2>
+    <p style="text-align:center;margin:0 auto;max-width:540px">Companies and brands supporting Champion's Code and the “Russia. Starting Point” almanac.</p>
+  </div>
+  <div class="marquee">
+    <div class="marquee-track" id="brandTrack">
+      <div class="brand-item"><img src="images/brands/brand-1.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-2.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-3.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-4.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-5.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-6.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-7.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-8.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-1.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-2.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-3.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-4.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-5.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-6.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-7.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+      <div class="brand-item"><img src="images/brands/brand-8.png" alt="" onload="this.closest('.brand-item').classList.add('has-logo');this.nextElementSibling.style.display='none'" onerror="this.style.display='none'"><span class="ghost"><b>LOGO</b>your brand</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="teaser">
+  <div class="wrap reveal">
+    <div class="eyebrow" style="justify-content:center;display:flex">Teaser</div>
+    <h2 class="display" id="teaser-title" style="text-align:center">Coming soon — a first look</h2>
+    <div class="teaser-frame">
+      <!-- Тизер: положи файл video/teaser.mp4 — плеер появится сам, заглушка скроется -->
+      <video id="teaser-video" controls preload="metadata" playsinline
+             style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000;z-index:3">
+        <source src="video/teaser.mp4" type="video/mp4">
+      </video>
+      <img class="poster" src="images/stills/still-tv-back.jpg" alt="">
+      <div class="dim"></div>
+      <div class="teaser-inner">
+        <div class="play-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+        <div class="teaser-soon">The teaser is on its way</div>
+        <p class="teaser-note">The film is in the edit and color-grading suite — the video teaser will be placed here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="invest">
+  <div class="media"><img src="images/bg-poles-standing.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="wrap invest-inner reveal">
+    <div class="eyebrow" style="justify-content:center;display:flex">For investors & partners</div>
+    <h2 class="display">Become part of<br>Champion's Code</h2>
+    <p style="margin:0 auto;max-width:600px">Production is underway: footage is shot, editing and color grading are in progress. We are looking for co-producers and partners to complete and promote the film.</p>
+    <div class="invest-points">
+      <div><b>No. 1</b>film of the almanac</div>
+      <div><b>60'</b>running time</div>
+      <div><b>2026</b>peak relevance</div>
+    </div>
+    <div class="invest-cta">
+      <a class="btn" href="https://t.me/BlackCobraPro" target="_blank" rel="noopener">Discuss partnership</a>
+      <a class="btn ghost" href="tel:+79254231542">+7 (925) 423-15-42</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="media"><img src="images/bg-medal.jpg" alt=""></div>
+  <div class="scrim"></div>
+  <div class="fire-line reveal">See you on the course!</div>
+  <div class="credit reveal">
+    <div class="label">Executive producer</div>
+    <div class="nm">Svetlana Kobrakova</div>
+    <div class="contacts">
+      <a class="tel" href="tel:+79254231542">✆ +7 (925) 423-15-42</a>
+      <a class="mail" href="mailto:black.cobra.kino@gmail.com">✉ black.cobra.kino@gmail.com</a>
+    </div>
+  </div>
+  <div class="bc reveal"><img src="images/black-cobra-logo.png" alt="Black Cobra">BLACK COBRA PRODUCTION</div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+const burger=document.getElementById('burger');
+burger.addEventListener('click',()=>nav.classList.toggle('open'));
+document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+(function(){
+  const s1=document.getElementById('ski1'), s2=document.getElementById('ski2');
+  if(!s1) return;
+  function upd(){const h=document.documentElement;const pct=Math.min(100,(h.scrollTop||document.body.scrollTop)/(h.scrollHeight-h.clientHeight)*100);s1.style.height=pct+'%';s2.style.height=Math.max(0,pct-2)+'%';}
+  addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
+})();
+
+(function(){
+  const skip=new Set(['SCRIPT','STYLE','NOSCRIPT','CANVAS']);
+  const short=/([\s\u00A0(«"„\-]|^)([А-Яа-яЁё]{1,2}|для|или|что|как|без|под|над|при|про|так|уже|ещё|его|ему|нас|вас|это|был|где)\u0020+/g;
+  const tw=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>(!skip.has(n.parentNode.nodeName)&&n.nodeValue.trim())?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_REJECT});
+  let n;while(n=tw.nextNode()){let t=n.nodeValue,prev;do{prev=t;t=t.replace(short,'$1$2\u00A0');}while(t!==prev);t=t.replace(/ ([—–]) /g,'\u00A0$1 ');n.nodeValue=t;}
+})();
+
+(function(){
+  const a=document.getElementById('bgm'),btn=document.getElementById('playbtn'),vol=document.getElementById('vol');
+  if(!a||!btn) return;
+  a.volume = vol ? vol.value/100 : 0.8;
+  if(vol) vol.addEventListener('input',()=>{a.volume=vol.value/100;});
+  function icon(){ btn.textContent = a.paused ? '▶' : '⏸'; }
+  function play(){ a.play().then(icon).catch(icon); }
+  btn.addEventListener('click',()=>{ a.paused ? play() : (a.pause(), icon()); });
+  icon();
+})();
+
+const c=document.getElementById('snow'),x=c.getContext('2d');
+let W,H,flakes;
+function size(){W=c.width=innerWidth;H=c.height=innerHeight;const n=Math.min(80,Math.round(W/18));
+  flakes=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.7+.4,s:Math.random()*.55+.2,d:Math.random()*Math.PI*2}));}
+size();addEventListener('resize',size);
+function draw(){x.clearRect(0,0,W,H);x.fillStyle='rgba(220,232,240,.5)';
+  flakes.forEach(f=>{f.y+=f.s;f.x+=Math.sin(f.d+=0.01)*.3;if(f.y>H){f.y=-5;f.x=Math.random()*W}x.beginPath();x.arc(f.x,f.y,f.r,0,7);x.fill();});
+  requestAnimationFrame(draw);}
+draw();
+
+/* lightbox: click a film still to open fullscreen */
+(function(){
+  const lb=document.getElementById('lightbox');
+  if(!lb) return;
+  const img=lb.querySelector('img');
+  const pics=[];
+  let idx=0;
+  function show(i){idx=(i+pics.length)%pics.length;img.src=pics[idx].src;lb.classList.add('open');document.body.style.overflow='hidden';}
+  function hide(){lb.classList.remove('open');document.body.style.overflow='';}
+  window.lbRegister=function(im){const i=pics.length;pics.push(im);im.parentElement.addEventListener('click',()=>show(i));};
+  document.querySelectorAll('.stills-track .still img').forEach(im=>window.lbRegister(im));
+  lb.querySelector('.lb-close').addEventListener('click',hide);
+  lb.querySelector('.lb-prev').addEventListener('click',e=>{e.stopPropagation();show(idx-1);});
+  lb.querySelector('.lb-next').addEventListener('click',e=>{e.stopPropagation();show(idx+1);});
+  lb.addEventListener('click',e=>{if(e.target===lb)hide();});
+  addEventListener('keydown',e=>{if(!lb.classList.contains('open'))return;
+    if(e.key==='Escape')hide();
+    if(e.key==='ArrowLeft')show(idx-1);
+    if(e.key==='ArrowRight')show(idx+1);});
+})();
+</script>
+
+<script>
+(function(){
+  var v=document.getElementById('teaser-video');if(!v)return;
+  v.addEventListener('loadedmetadata',function(){
+    var f=v.closest('.teaser-frame');
+    ['.teaser-inner','.dim','img.poster'].forEach(function(sel){var el=f.querySelector(sel);if(el)el.style.display='none';});
+    v.style.display='block';
+    document.getElementById('teaser-title').textContent='First look';
+  });
+})();
+</script>
+
+<script>
+/* карусель кадров: стрелки + авто-добавление файлов images/stills/still-1, still-2, ... */
+(function(){
+  const track=document.getElementById('stills-track');if(!track)return;
+  const step=()=>{const st=track.querySelector('.still');return st?st.getBoundingClientRect().width+16:320};
+  document.querySelector('.st-prev').addEventListener('click',()=>track.scrollBy({left:-step(),behavior:'smooth'}));
+  document.querySelector('.st-next').addEventListener('click',()=>track.scrollBy({left:step(),behavior:'smooth'}));
+  const exts=['jpg','jpeg','png','webp'];
+  const ALT="Still from the film The Champion's Code";
+  function addSlide(url){
+    const d=document.createElement('div');d.className='still';
+    const im=document.createElement('img');im.loading='lazy';im.src=url;im.alt=ALT;
+    d.appendChild(im);track.appendChild(d);
+    if(window.lbRegister)window.lbRegister(im);
+  }
+  (function tryLoad(n,e){
+    if(e>=exts.length)return; /* номера кончились — стоп */
+    const url='images/stills/still-'+n+'.'+exts[e];
+    const probe=new Image();
+    probe.onload=function(){addSlide(url);tryLoad(n+1,0);};
+    probe.onerror=function(){tryLoad(n,e+1);};
+    probe.src=url;
+  })(1,0);
+})();
+</script>
+</body>
+</html>
